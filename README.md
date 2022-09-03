@@ -11,6 +11,6 @@ This is an employee/HR website portal for managing the new employee onboarding p
 **Cloud**: AWS S3 <br />
 
 ## Team
-Supervisors: Ryan Lin, Ryan Tam
-Project Manager: Li Li
-Super Star Developers: Wensong Zhang, Boom Thamutok, Caleb Li
+Supervisors: Ryan Lin, Ryan Tam <br />
+Project Manager: Li Li <br />
+Super Star Developers: Wensong Zhang, Boom Thamutok, Caleb Li <br />
