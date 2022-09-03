@@ -13,4 +13,4 @@ This is an employee/HR website portal for managing the new employee onboarding p
 ## Team
 Supervisors: Ryan Lin, Ryan Tam <br />
 Project Manager: Li Li <br />
-Super Star Developers: Wensong Zhang, Boom Thamutok, Caleb Li <br />
+Super Star Developers: Wensong Zhang, Boom Thamutok, Caleb Li, Li Li <br />
