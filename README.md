@@ -12,11 +12,11 @@ This is an employee/HR website portal for managing the new employee onboarding p
 
 ## How To Run
 **Backend**: under the backend folder, type the following commands in terminal in VS Code (backend runs on port 4000) <br />
-```npm install```
-```nodemon index.js```
+```npm install``` <br />
+```nodemon index.js``` <br />
 **Frontend**: under the frontend foler, type the following commands in terminal in VS Code (frontend runs on port 3000) <br />
-```npm install```
-```npm start```
+```npm install``` <br />
+```npm start``` <br />
 ## Team
 Supervisors: Ryan Lin, Ryan Tam <br />
 Project Manager: Li Li <br />
