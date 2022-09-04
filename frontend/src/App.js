@@ -1,24 +1,28 @@
+import './App.css';
+import NavBar from './components/NavBar/NavBar';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// import PersonalInfo from './PersonalInfo/PersonalInfo';
+import Visa from './components/Visa/visa';
+// import Housing from './components/Housing/housing';
 import Login from './component/Login/Login';
 import Signup from './component/Signup/Signup';
-import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
-import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <div className="nav-bar">
-          <Link to="/Login"> Login </Link>
-          <Link to="/Signup"> Signup </Link>
-        </div>
+    <div className="App">
+      <BrowserRouter>
+        <nav className="main-nav"><NavBar /></nav>
+
         <Routes>
-              <Route path="/">
-                <Route path="Login" element={<Login />} />
-                <Route path="Signup" element={<Signup />} />
-              </Route>
-            </Routes>
-      </div>
-    </Router>
+            {/* <Route path="personalInfo" element={<PersonalInfo />} /> */}
+            <Route path="visa" element={<Visa />} />
+            {/* <Route path="housing" element={<Housing />} /> */}
+            <Route path="Login" element={<Login />} />
+            <Route path="Signup" element={<Signup />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
