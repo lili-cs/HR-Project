@@ -15,12 +15,12 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     house:{
-        type: ObjectId,
+        type: mongoose.Types.ObjectId,
         required: false,
         default: undefined,
     },
     onBoardApplication:{
-        type: ObjectId,
+        type: mongoose.Types.ObjectId,
         required: false,
         default: undefined,
     },

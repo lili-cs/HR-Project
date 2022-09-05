@@ -17,41 +17,43 @@ class Signup extends Component {
   }
   onSubmit(e) {
     e.preventDefault()
-    console.log("In Submit")
-    const form = this.state.form
-    console.log("form: ", form)
-    const username = form.username
-    const password = form.password
-    const email = form.email
-    console.log("email: ", email)
-    console.log("username: ", username)
-    console.log("password: ", password)
-    // check email format
-    if (this.state.form.errorMsg === "Invalid Email"){
-      alert("Email invalid")
-    }
-    // post request
-    axios("/Signup",{
-      method: "post",
-      headers:{'Content-Type': 'application/json'},
-      body:{
+    if (!this.state.errorMsg){
+
+      console.log("In Submit")
+      const form = this.state.form
+      console.log("form: ", form)
+      const username = form.username
+      const password = form.password
+      const email = form.email
+      console.log("email: ", email)
+      console.log("username: ", username)
+      console.log("password: ", password)
+      // check email format
+      if (this.state.form.errorMsg === "Invalid Email"){
+        alert("Email invalid")
+        return
+      }
+      // post request
+      const localHost = "http://localhost:4000"
+      axios.post(`${localHost}/Signup`,{
         username: username,
         password:password,
-        email:email,
-      }
+        email:email,})
+      .then((res)=>{
+        console.log("res: ", res);
+        if (res.data.errorMsg) throw new Error(res.data.errorMsg)
+        else if (res.data.success){
+          // on success display success message
+          alert("Register successfully")
+        }
+      })
+      .catch((error)=>{ // error caught
+        console.log("error: ", error);
+        alert(error)
+      })
     }
-    .then((res)=>res.json())
-    .then((res)=>{
-      alert (res)
-    })
-    .catch((error)=>{
-      console.log(error)
-      alert(error)
-    })
-    )
-
-
   }
+
   emailOnChange(e) {
     let oldForm = this.state.form
     oldForm.email = e.target.value

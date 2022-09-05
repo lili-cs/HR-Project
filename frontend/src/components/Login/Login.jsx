@@ -40,24 +40,19 @@ class Login extends Component {
 
   render() {
     return(
-      <div>
-          <div className="form">
-            <h2>Login</h2>
-            <form>
-              <label> Username: </label>
-              <input type="text" name="userName" id="userName" placeholder='Enter Your Username' onChange={(e) => this.usernameOnChange(e)} />
-              <br />
-              <label> Password: </label>
-              <input type="text" name="password" id="password" placeholder='Enter Your Password' onChange={(e) => this.passwordOnChange(e)} />
-              <br />
-              {/* <label> productPrice</label>
-              <input type="number" name="productPrice" id="productPrice" value={this.state.form.productPrice} onChange={(e) => this.productPriceChange(e)} /> */}
-              <button type="button" onClick={(e) => this.onSubmit(e)}>Submit</button>
-            </form>
-        </div>
-      </div>
-    );
-  }
+      <div className="form">
+          <h2>Login</h2>
+          <form>
+            <label> Username: </label>
+            <input type="text" name="userName" id="userName" placeholder='Enter Your Username' onChange={(e) => this.usernameOnChange(e)} />
+            <br />
+            <label> Password: </label>
+            <input type="text" name="password" id="password" placeholder='Enter Your Password' onChange={(e) => this.passwordOnChange(e)} />
+            <br />
+            <button type="button" onClick={(e) => this.onSubmit(e)}>Submit</button>
+          </form>
+        </div> 
+  )}
 }
 
 export default Login;
