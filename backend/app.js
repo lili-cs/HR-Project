@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-
+const { userInfoController } = require('./controllers/userInfoController');
 
 
 //  view engine setup
@@ -10,6 +10,7 @@ app.set('view engine', 'pug');
 
 
 app.use(express.json());
+app.use(userInfoController);
 
 const publicFolder = path.join(__dirname, 'public');
 app.use(express.static(publicFolder));
