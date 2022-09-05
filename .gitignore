@@ -1,0 +1,12 @@
+
+# dependencies
+/backend/node_modules
+/frontend/node_modules
+
+# testing
+/coverage
+
+# production
+build/
+
+
