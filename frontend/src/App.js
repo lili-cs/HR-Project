@@ -5,8 +5,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import PersonalInfo from './PersonalInfo/PersonalInfo';
 import Visa from './components/Visa/visa';
 // import Housing from './components/Housing/housing';
-import Login from './component/Login/Login';
-import Signup from './component/Signup/Signup';
+import Login from './components/Login/Login';
+import Signup from './components/Signup/Signup';
 
 function App() {
   return (
