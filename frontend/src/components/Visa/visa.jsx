@@ -1,15 +1,31 @@
 import React from "react";
+// import axios from "axios";
+import { uploadFile } from 'react-s3';
+window.Buffer = window.Buffer || require("buffer").Buffer;
 
-const ThemeContext = React.createContext('default');
+const S3_BUCKET ='mybucketforhrproject';
+const REGION ='US East (N. Virginia) us-east-1';
+const ACCESS_KEY ='AKIAR6M2ZVOWQKSQ22FB';
+const SECRET_ACCESS_KEY ='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';
+
+const config = {
+    bucketName: S3_BUCKET,
+    region: REGION,
+    accessKeyId: ACCESS_KEY,
+    secretAccessKey: SECRET_ACCESS_KEY,
+}
 
 class Visa extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            receipt: {status: "Approved"},
-            ead: {status: "Approved"},
-            i983: {status: "Pending"},
-            i20: {status: "Pending"}
+            userId: "123",
+            receipt: "Pending",
+            ead: "",
+            i983: "",
+            i20: "",
+            selectedFile: null,
+            // setSelectedFile: null,
         };
         // this.fetch = this.fetch.bind(this);
     }
@@ -22,121 +38,135 @@ class Visa extends React.Component {
         //
     }
 
-    render() {
-        if(this.state.receipt.status === "Pending"){
-            return (
-                <div className="visa-main">
-                <h2>Visa</h2>
-                <hr />
-                {showReceipt()}
-                <p>Status: {this.state.receipt.status}</p>
-            </div>
-            )
-        }
+    handleFileInput = async (e) => {
+        this.selectedFile = e.target.files[0];
+    }
 
-        if(this.state.ead.status === "Pending"){
-            return (
-                <div className="visa-main">
-                <h2>Visa</h2>
-                <hr />
-                {showReceipt()}
-                <p>Status: {this.state.receipt.status}</p>
-                {showEad()}
-                <p>Status: {this.state.ead.status}</p>
-            </div>
-            )
-        }
+    handleUpload = async (file) => {
+        // console.log(file);
+        uploadFile(file, config)
+            .then(data => console.log(data))
+            .catch(err => console.error(err))
+    }
 
-        if(this.state.i983.status === "Pending"){
-            return (
-                <div className="visa-main">
-                <h2>Visa</h2>
-                <hr />
-                {showReceipt()}
-                <p>Status: {this.state.receipt.status}</p>
-                {showEad()}
-                <p>Status: {this.state.ead.status}</p>
-                {showI983()}
-                <p>Status: {this.state.i983.status}</p>
-            </div>
-            )
-        }
-
-        if(this.state.i20.status === "Pending"){
-            return (
-                <div className="visa-main">
-                <h2>Visa</h2>
-                <hr />
-                {showReceipt()}
-                <p>Status: {this.state.receipt.status}</p>
-                {showEad()}
-                <p>Status: {this.state.ead.status}</p>
-                {showI983()}
-                <p>Status: {this.state.i983.status}</p>
-                {showI20()}
-                <p>Status: {this.state.i20.status}</p>
-            </div>
-            )
-        }
-
+    showReceipt() {
         return (
-            <div className="visa-main">
-                <h2>Visa</h2>
+            <div>
+                <h2>OPT Receipt</h2>
+                <div className="upload-file">
+                    <input type="file" name="opt-receipt-file" id="opt-receipt-file" onChange={(e) => {this.handleFileInput(e)}}/>
+                    <label>Choose a file</label>
+                    <button type="button" id="opt-receipt-button" onClick={() => this.handleUpload(this.selectedFile)}>Upload</button>
+                </div>
             </div>
         );
     }
-}
 
-function showReceipt() {
-    return (
-        <div>
-            <h2>OPT Receipt</h2>
-            <div className="upload-file">
-                <input type="file" name="opt-receipt-file" id="opt-receipt-file" />
-                <label>Choose a file</label>
-                <button type="button" id="opt-receipt-button">Upload</button>
+    showEad() {
+        return(
+            <div>
+                <h2>OPT EAD</h2>
+                <div className="upload-file">
+                    <input type="file" name="opt-ead-file" id="opt-ead-file" />
+                    <label>Choose a file</label>
+                    <button type="button" id="opt-ead-button">Upload</button>
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-function showEad() {
-    return(
-        <div>
-            <h2>OPT EAD</h2>
-            <div className="upload-file">
-                <input type="file" name="opt-ead-file" id="opt-ead-file" />
-                <label>Choose a file</label>
-                <button type="button" id="opt-ead-button">Upload</button>
+    showI983() {
+        return (
+            <div>
+                <h2>I-983</h2>
+                <div className="upload-file">
+                    <input type="file" name="i-983-file" id="i-983-file" />
+                    <label>Choose a file</label>
+                    <button type="button" id="i-983-button">Upload</button>
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-function showI983() {
-    return (
-        <div>
-            <h2>I-983</h2>
-            <div className="upload-file">
-                <input type="file" name="i-983-file" id="i-983-file" />
-                <label>Choose a file</label>
-                <button type="button" id="i-983-button">Upload</button>
+    showI20(){
+        return(
+            <div>
+                <h2>I-20</h2>
+                <div className="upload-file">
+                    <input type="file" name="i-20-file" id="i-20-file" />
+                    <label>Choose a file</label>
+                    <button type="button" id="i-20-button">Upload</button>
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
+    
 
-function showI20(){
-    return(
-        <div>
-            <h2>I-20</h2>
-            <div className="upload-file">
-                <input type="file" name="i-20-file" id="i-20-file" />
-                <label>Choose a file</label>
-                <button type="button" id="i-20-button">Upload</button>
-            </div>
-        </div>
-    );
+
+    render() {
+        // if(this.state.receipt.status === "Pending"){
+        //     return (
+        //         <div className="visa-main">
+        //         <h2>Visa</h2>
+        //         <hr />
+        //         {this.showReceipt()}
+        //         <p>Status: {this.state.receipt.status}</p>
+        //     </div>
+        //     )
+        // }
+
+        // if(this.state.ead.status === "Pending"){
+        //     return (
+        //         <div className="visa-main">
+        //         <h2>Visa</h2>
+        //         <hr />
+        //         {this.showReceipt()}
+        //         <p>Status: {this.state.receipt.status}</p>
+        //         {this.showEad()}
+        //         <p>Status: {this.state.ead.status}</p>
+        //     </div>
+        //     )
+        // }
+
+        // if(this.state.i983.status === "Pending"){
+        //     return (
+        //         <div className="visa-main">
+        //         <h2>Visa</h2>
+        //         <hr />
+        //         {this.showReceipt()}
+        //         <p>Status: {this.state.receipt.status}</p>
+        //         {this.showEad()}
+        //         <p>Status: {this.state.ead.status}</p>
+        //         {this.showI983()}
+        //         <p>Status: {this.state.i983.status}</p>
+        //     </div>
+        //     )
+        // }
+
+        // if(this.state.i20.status){
+            return (
+                <div className="visa-main">
+                    <h2>Visa</h2>
+                    <hr />
+                    <h3>ID:{this.state.userId}</h3>
+                    {this.showReceipt()}
+                    <p>Status: {this.state.receipt}</p>
+                    {this.showEad()}
+                    <p>Status: {this.state.ead}</p>
+                    {this.showI983()}
+                    <p>Status: {this.state.i983}</p>
+                    {this.showI20()}
+                    <p>Status: {this.state.i20}</p>
+                </div>
+            )
+        // }
+
+        // return (
+        //     <div className="visa-main">
+        //         <h2>Visa</h2>
+        //     </div>
+        // );
+    }
 }
 
 export default Visa;
