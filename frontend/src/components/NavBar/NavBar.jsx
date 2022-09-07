@@ -23,6 +23,7 @@ class NavBar extends React.Component {
                 <div className="nav-left">
                     <NavLink to="PersonalInfo">Personal Information</NavLink>
                     <NavLink to="visa">Visa Status Management</NavLink>
+                    <NavLink to="visaHR">Visa-HR</NavLink>
                     <NavLink to="housing">Housing</NavLink>
                 </div>
                 <div className="nav-button-logout">
