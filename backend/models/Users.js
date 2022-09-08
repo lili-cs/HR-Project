@@ -14,16 +14,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    house:{
-        type: mongoose.Types.ObjectId,
-        required: false,
-        default: undefined,
-    },
-    onBoardApplication:{
-        type: mongoose.Types.ObjectId,
-        required: false,
-        default: undefined,
-    },
     admin:{
         type: Boolean,
         required: true,
@@ -33,3 +23,15 @@ const userSchema = new mongoose.Schema({
 
 const UserModel = mongoose.model("User", userSchema);
 module.exports = UserModel;
+
+
+    // house:{
+    //     type: mongoose.Types.ObjectId,
+    //     required: false,
+    //     default: undefined,
+    // },
+    // onBoardApplication:{
+    //     type: mongoose.Types.ObjectId,
+    //     required: false,
+    //     default: undefined,
+    // },
