@@ -1,10 +1,14 @@
 require('dotenv').config()
 var express = require('express');
 var router = express.Router();
-const UserModel = require("../model/users")     // db model(schema)
+const UserModel = require("../models/Users")     // db model(schema)
 const bcrypt = require('bcryptjs');             // password hash
+const jwt = require("jsonwebtoken");
 const EMAIL_VALIDATION = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+const {adminPage,nonAdminPage} = {  // define redirect for admin and non-admin users
+  adminPage:"/visaHR",
+  nonAdminPage:"/PersonalInfo"
+}
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -13,23 +17,48 @@ router.get('/', function(req, res, next) {
 
 // login
 router.post('/Login', async (req,res)=>{
-  // check email and hashedPassword in db
+  console.log("req.headers: ", req.headers)
+  const {password,username} = req.body
   console.log("in Login")
-  // await UserModel.findOne({email:req.body.email})
-  // .then(async (dbRecord) => {
-  //     if (dbRecord == null){res.write("Invalid username or password")}
-  //     else{
-  //         // check pswd
-  //         let check =await bcrypt.compare(req.body.password, dbRecord.hashedPassword)
-  //         if(!check){res.write("Invalid username or password")}
-  //         else{
-  //             res.write("Successfully logged in")
-  //         }
-  //     }
-  // })
-  // .catch(err=>console.log("err: ",err))
-
-  res.send(200)
+  console.log("password: ", password)
+  console.log("username: ", username)
+  try{
+    // find username in db
+    let dbResp = await UserModel.findOne({username:username})
+    console.log("dbResp: ", dbResp)
+    // if not found, throw error
+    if (dbResp == null) res.send({errorMsg:'Username not found, please enter a correct one.'})
+    // username found
+    else{
+      // username in db
+      let hashedPswd = dbResp.password
+      console.log("hashedPswd: ", hashedPswd)
+      // check password match
+      let equal = await bcrypt.compare(password,hashedPswd)
+      console.log("equal: ", equal)
+      // if not match
+      if (!equal) {
+        res.send({errorMsg:'Password not match.'})
+        return
+      }
+      // if passwords match, sign a JWT token and return to 
+      const signed_jwt = jwt.sign({
+        username:username,
+        email:dbResp.email,
+        admin:dbResp.admin,
+      }, process.env.JWT_SECRET_KEY);
+      console.log("signed_jwt: ", signed_jwt)
+      // redirect to proper page (admin or not)
+      const redirectURL = dbResp.admin? adminPage:nonAdminPage
+      console.log("redirectURL: ", redirectURL)
+      // send jwt token to front end
+      res.send({token:signed_jwt,success:true,redirect:redirectURL})
+    }
+  }catch(e){  // username not in db
+    console.log("e: ", e)
+    // error response
+    res.send({errorMsg:e})
+  }
 })
 
 // register

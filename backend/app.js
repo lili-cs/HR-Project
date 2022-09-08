@@ -3,10 +3,10 @@ const app = express();
 const path = require('path');
 
 const { userInfoController } = require('./controllers/userInfoController');
+const { VisaController } = require('./controllers/VisaController');
 
 
 const userRouter = require('./routes/users');
-
 
 // cors
 app.use((req, res, next) => {
@@ -27,6 +27,7 @@ const publicFolder = path.join(__dirname, 'public');
 app.use(express.static(publicFolder));
 
 app.use(userRouter)
+app.use(VisaController)
 
 app.get('/', async (req, res) => {
   res.send('hello');
