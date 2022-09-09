@@ -25,6 +25,7 @@ class NavBar extends React.Component {
                     <NavLink to="visa">Visa Status Management</NavLink>
                     <NavLink to="visaHR">Visa-HR</NavLink>
                     <NavLink to="housing">Housing</NavLink>
+                    <NavLink to="OnboardingApplication">Onboarding Application</NavLink> 
                 </div>
                 <div className="nav-button-logout">
                     <NavLink to="Login">Login</NavLink>

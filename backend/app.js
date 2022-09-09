@@ -4,7 +4,7 @@ const path = require('path');
 
 const { userInfoController } = require('./controllers/userInfoController');
 const { VisaController } = require('./controllers/VisaController');
-
+const { OnboardingApplicationController } = require('./controllers/onboardingApplicationController');
 
 const userRouter = require('./routes/users');
 
@@ -26,8 +26,9 @@ app.use(userInfoController);
 const publicFolder = path.join(__dirname, 'public');
 app.use(express.static(publicFolder));
 
-app.use(userRouter)
-app.use(VisaController)
+app.use(userRouter);
+app.use(VisaController);
+app.use(OnboardingApplicationController);
 
 app.get('/', async (req, res) => {
   res.send('hello');

@@ -49,3 +49,17 @@ nav {
     border-bottom-left-radius: 0.5rem;
   }
 } */
+
+.onboarding-application-wrapper {
+  padding: 5px 20px;
+}
+
+.onboarding-application-wrapper .form-row{
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0px;
+}
+
+.onboarding-application-wrapper fieldset, data-field {
+  margin: 20px 0;
+}
