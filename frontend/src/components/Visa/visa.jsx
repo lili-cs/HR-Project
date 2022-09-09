@@ -128,6 +128,7 @@ class Visa extends React.Component {
     }
 
     handleUpload_I20 = async (e) => {
+        e.preventDefault();
         await uploadFile(this.state.selectedFile, config)
             .then(data => {
                 const localHost = "http://localhost:4000"
@@ -190,7 +191,7 @@ class Visa extends React.Component {
                 <div className="upload-file">
                     <input type="file" name="i-20-file" id="i-20-file" onChange={(e) => {this.handleFileInput(e)}} />
                     <label>Choose a file</label>
-                    <button type="button" id="i-20-button" onClick={() => this.handleUpload_I20()}>Upload</button>
+                    <button type="button" id="i-20-button" onClick={(e) => this.handleUpload_I20(e)}>Upload</button>
                 </div>
             </div>
         );
