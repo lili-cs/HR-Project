@@ -8,6 +8,7 @@ import VisaHR from './components/Visa/visaHR';
 // import Housing from './components/Housing/housing';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
+import OnboardingApplication from './components/OnboardingApplication/OnboardingApplication';
 
 function App() {
   return (
@@ -19,9 +20,12 @@ function App() {
             {/* <Route path="personalInfo" element={<PersonalInfo />} /> */}
             <Route path="visa" element={<Visa />} />
             <Route path="visaHR" element={<VisaHR />} />
+            <Route path="OnboardingApplication" element= {<OnboardingApplication />} />
             {/* <Route path="housing" element={<Housing />} /> */}
             <Route path="Login" element={<Login />} />
             <Route path="Signup" element={<Signup />} />
+
+
         </Routes>
       </BrowserRouter>
     </div>
