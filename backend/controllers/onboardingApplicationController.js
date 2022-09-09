@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const express = require('express');
 const router = express.Router();
-const User = require('../models/users');
+const User = require('../models/Users');
 const UserInfo = require('../models/UserInfo');
 const OnboardingApplication = require('../models/OnboardingApplication');
 
