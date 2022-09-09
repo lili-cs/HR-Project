@@ -8,8 +8,8 @@ import VisaHR from "./components/Visa/visaHR";
 // import Housing from './components/Housing/housing';
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
-import Hrprofile from "./components/hr/Hrprofile";
-import Employees from "./components/employee/Employees";
+import Hrprofile from "./components/hr/Hremprofile";
+import Employee from "./components/Employee/Employee";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         </nav>
 
         <Routes>
-          <Route path="personalInfo" element={<Employees />} />
+          <Route path="personalInfo" element={<Employee />} />
           <Route path="personalInfoHr" element={<Hrprofile />} />
           <Route path="visa" element={<Visa />} />
           <Route path="visaHR" element={<VisaHR />} />
