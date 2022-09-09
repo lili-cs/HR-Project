@@ -63,3 +63,19 @@ nav {
 .onboarding-application-wrapper fieldset, data-field {
   margin: 20px 0;
 }
+
+.visa-form-group {
+  display: flex;
+  /* align-items: center; */
+  justify-content: left;
+  padding: 10px;
+}
+
+.visa-all , .visa-in-progress {
+  /* border: 1px solid black; */
+  margin: 0 50px;
+}
+
+.user-all , .user-in-progress {
+  border: 1px solid black;
+}
