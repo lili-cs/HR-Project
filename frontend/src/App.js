@@ -8,7 +8,7 @@ import VisaHR from "./components/Visa/visaHR";
 // import Housing from './components/Housing/housing';
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
-import Hrprofile from "./components/hr/Hremprofile";
+import Hrprofile from "./components/hr/hrprofile";
 import Employee from "./components/Employee/Employee";
 
 function App() {

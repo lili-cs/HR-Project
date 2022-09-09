@@ -21,7 +21,7 @@ class Visa extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userId: "6315c9816bec8a6d8a0361fa",
+            userId: "6319a53889857ffd2112069c",
             receipt: {
                 status: null,
                 link: null,
@@ -50,6 +50,19 @@ class Visa extends React.Component {
     }
 
     componentDidMount() {
+        const jwtToken = localStorage.getItem("jwtToken");
+        const localHost = "http://localhost:4000"
+        axios.post(`${localHost}/visa`, {
+            jwtToken: jwtToken,
+        })
+        .then(res => {
+            console.log(res.data);
+            this.setState({
+                userId: res.data.userId,
+            });
+        })
+        .catch(err => console.log(err));
+        
         this.fetchProfile();
     }
 
@@ -58,7 +71,7 @@ class Visa extends React.Component {
         axios.get(`${localHost}/visa_user/${this.state.userId}`)
             .then(res => {
                 this.setState({
-                    userId: res.data.userId,
+                    // userId: res.data.userId,
                     receipt: res.data.opt_receipt,
                     ead: res.data.opt_ead,
                     i983: res.data.i983,
@@ -83,12 +96,11 @@ class Visa extends React.Component {
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
-                    .then(res => {
-                        console.log("===");
-                        console.log(res.data);
-                        console.log("===");
-                    })
-                    .catch(err => console.log(err));
+                .then(res => {
+                    console.log(res.data);
+                    alert("File uploaded successfully");
+                })
+                .catch(err => console.log(err));
             })
             .catch(err => console.error(err))
     }
@@ -102,10 +114,11 @@ class Visa extends React.Component {
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
-                    .then(res => {
-                        console.log(res.data);
-                    })
-                    .catch(err => console.log(err));
+                .then(res => {
+                    console.log(res.data);
+                    alert("File uploaded successfully");
+                })
+                .catch(err => console.log(err));
             })
             .catch(err => console.error(err))
     }
@@ -119,10 +132,11 @@ class Visa extends React.Component {
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
-                    .then(res => {
-                        console.log(res.data);
-                    })
-                    .catch(err => console.log(err));
+                .then(res => {
+                    console.log(res.data);
+                    alert("File uploaded successfully");
+                })
+                .catch(err => console.log(err));
             })
             .catch(err => console.error(err))
     }
@@ -137,17 +151,18 @@ class Visa extends React.Component {
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
-                    .then(res => {
-                        console.log(res.data);
-                    })
-                    .catch(err => console.log(err));
+                .then(res => {
+                    console.log(res.data);
+                    alert("File uploaded successfully");
+                })
+                .catch(err => console.log(err));
             })
             .catch(err => console.error(err))
     }
 
     showReceipt() {
         return (
-            <div>
+            <div className="visa-content">
                 <h2>OPT Receipt</h2>
                 <div className="upload-file">
                     <input type="file" name="opt-receipt-file" id="opt-receipt-file" onChange={(e) => {this.handleFileInput(e)}}/>
@@ -160,7 +175,7 @@ class Visa extends React.Component {
 
     showEad() {
         return(
-            <div>
+            <div className="visa-content">
                 <h2>OPT EAD</h2>
                 <div className="upload-file">
                     <input type="file" name="opt-ead-file" id="opt-ead-file" onChange={(e) => {this.handleFileInput(e)}} />
@@ -173,7 +188,7 @@ class Visa extends React.Component {
 
     showI983() {
         return (
-            <div>
+            <div className="visa-content">
                 <h2>I-983</h2>
                 <div className="upload-file">
                     <input type="file" name="i-983-file" id="i-983-file" onChange={(e) => {this.handleFileInput(e)}} />
@@ -186,7 +201,7 @@ class Visa extends React.Component {
 
     showI20(){
         return(
-            <div>
+            <div className="visa-content">
                 <h2>I-20</h2>
                 <div className="upload-file">
                     <input type="file" name="i-20-file" id="i-20-file" onChange={(e) => {this.handleFileInput(e)}} />
