@@ -11,16 +11,16 @@ const visaSchema = new Schema({
         required: true,
     },
     opt_receipt: {
-        type: String,
+        type: Object,
     },
     opt_ead: {
-        type: String,
+        type: Object,
     },
     i20: {
-        type: String,
+        type: Object,
     },
     i983: {
-        type: String,
+        type: Object,
     }
 });
 

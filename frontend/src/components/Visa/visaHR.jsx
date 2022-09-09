@@ -41,10 +41,19 @@ class VisaHR extends React.Component {
                             return (
                                 <div key="user-all">
                                     <h3>ID: {user.userId}</h3>
-                                    <p>Receipt: {user.opt_receipt}</p>
-                                    <p>EAD: {user.opt_ead}</p>
-                                    <p>I983: {user.i983}</p>
-                                    <p>I20: {user.i20}</p>
+                                    <p>Receipt: </p>
+                                    <li>Status: {user.opt_receipt.status}</li>
+                                    <li></li>
+                                    <li><a href={user.opt_receipt.link}>{user.opt_receipt.name}</a></li>
+                                    <p>EAD: </p>
+                                    <li>Status: {user.opt_ead.status}</li>
+                                    <li><a href={user.opt_ead.link}>{user.opt_ead.name}</a></li>
+                                    <p>I983: </p>
+                                    <li>Status: {user.i983.status}</li>
+                                    <li><a href={user.i983.link}>{user.i983.name}</a></li>
+                                    <p>I20: </p>
+                                    <li>Status: {user.i20.status}</li>
+                                    <li><a href={user.i20.link}>{user.i20.name}</a></li>
                                     <hr />
                                 </div>
                             )
@@ -54,10 +63,19 @@ class VisaHR extends React.Component {
                             return (
                                 <div key="user-in-progress">
                                     <h3>ID: {user.userId}</h3>
-                                    <p>Receipt: {user.opt_receipt}</p>
-                                    <p>EAD: {user.opt_ead}</p>
-                                    <p>I983: {user.i983}</p>
-                                    <p>I20: {user.i20}</p>
+                                    <p>Receipt: </p>
+                                    <li>Status: {user.opt_receipt.status}</li>
+                                    <li></li>
+                                    <li><a href={user.opt_receipt.link}>{user.opt_receipt.name}</a></li>
+                                    <p>EAD: </p>
+                                    <li>Status: {user.opt_ead.status}</li>
+                                    <li><a href={user.opt_ead.link}>{user.opt_ead.name}</a></li>
+                                    <p>I983: </p>
+                                    <li>Status: {user.i983.status}</li>
+                                    <li><a href={user.i983.link}>{user.i983.name}</a></li>
+                                    <p>I20: </p>
+                                    <li>Status: {user.i20.status}</li>
+                                    <li><a href={user.i20.link}>{user.i20.name}</a></li>
                                     <hr />
                                 </div>
                             )
