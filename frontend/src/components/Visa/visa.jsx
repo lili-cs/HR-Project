@@ -7,8 +7,8 @@ window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const S3_BUCKET ='mybucketforhrproject';
 const REGION ='us-east-1';
-const ACCESS_KEY ='AKIAR6M2ZVOWQKSQ22FB';
-const SECRET_ACCESS_KEY ='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';
+const ACCESS_KEY ='AKIAR6M2ZVOW2QK5I4O7';
+const SECRET_ACCESS_KEY ='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';
 
 const config = {
     bucketName: S3_BUCKET,
@@ -21,7 +21,7 @@ class Visa extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userId: "6319a53889857ffd2112069c",
+            userId: "",
             receipt: {
                 status: null,
                 link: null,
@@ -44,8 +44,8 @@ class Visa extends React.Component {
             },
             selectedFile: null,
         };
-        this.fetch = this.fetchProfile.bind(this);
-        this.handleFileInput = this.handleFileInput.bind(this)
+        // this.fetch = this.fetchProfile.bind(this);
+        // this.handleFileInput = this.handleFileInput.bind(this)
         // this.handleUpload = this.handleUpload.bind(this)
     }
 
@@ -55,23 +55,27 @@ class Visa extends React.Component {
         axios.post(`${localHost}/visa`, {
             jwtToken: jwtToken,
         })
-        .then(res => {
+        .then(async res => {
             console.log(res.data);
-            this.setState({
+            await this.setState({
                 userId: res.data.userId,
+                receipt: res.data.opt_receipt,
+                ead: res.data.opt_ead,
+                i983: res.data.i983,
+                i20: res.data.i20,
             });
+            console.log(this.state.userId);
+            this.fetchProfile();
         })
         .catch(err => console.log(err));
-        
-        this.fetchProfile();
     }
 
     fetchProfile() {
         const localHost = "http://localhost:4000"
         axios.get(`${localHost}/visa_user/${this.state.userId}`)
-            .then(res => {
-                this.setState({
-                    // userId: res.data.userId,
+            .then(async res => {
+                await this.setState({
+                    userId: res.data.userId,
                     receipt: res.data.opt_receipt,
                     ead: res.data.opt_ead,
                     i983: res.data.i983,
@@ -88,17 +92,18 @@ class Visa extends React.Component {
     }
 
     handleUpload_Receipt = async (e) => {
+        console.log(this.state.userId);
         await uploadFile(this.state.selectedFile, config)
             .then(data => {
                 const localHost = "http://localhost:4000"
                 axios.post(`${localHost}/visa_user/${this.state.userId}/opt_receipt`, {
-                    status: "Pending",
+                    status: "Pending. Waiting for HR to approve your OPT Receipt.",
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
                 .then(res => {
                     console.log(res.data);
-                    alert("File uploaded successfully");
+                    alert("File uploaded successfully. Please refresh the page to see the updated status.");
                 })
                 .catch(err => console.log(err));
             })
@@ -110,13 +115,13 @@ class Visa extends React.Component {
             .then(data => {
                 const localHost = "http://localhost:4000"
                 axios.post(`${localHost}/visa_user/${this.state.userId}/opt_ead`, {
-                    status: "Pending",
+                    status: "Pending. Waiting for HR to approve your OPT EAD.",
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
                 .then(res => {
                     console.log(res.data);
-                    alert("File uploaded successfully");
+                    alert("File uploaded successfully. Please refresh the page to see the updated status.");
                 })
                 .catch(err => console.log(err));
             })
@@ -128,13 +133,13 @@ class Visa extends React.Component {
             .then(data => {
                 const localHost = "http://localhost:4000"
                 axios.post(`${localHost}/visa_user/${this.state.userId}/i983`, {
-                    status: "Pending",
+                    status: "Pending. Waiting for HR to approve your I983.",
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
                 .then(res => {
                     console.log(res.data);
-                    alert("File uploaded successfully");
+                    alert("File uploaded successfully. Please refresh the page to see the updated status.");
                 })
                 .catch(err => console.log(err));
             })
@@ -147,13 +152,13 @@ class Visa extends React.Component {
             .then(data => {
                 const localHost = "http://localhost:4000"
                 axios.post(`${localHost}/visa_user/${this.state.userId}/i20`, {
-                    status: "Pending",
+                    status: "Pending. Waiting for HR to approve your I20.",
                     link: data.location,
                     name: this.state.selectedFile.name,
                 })
                 .then(res => {
                     console.log(res.data);
-                    alert("File uploaded successfully");
+                    alert("File uploaded successfully. Please refresh the page to see the updated status.");
                 })
                 .catch(err => console.log(err));
             })
@@ -169,6 +174,8 @@ class Visa extends React.Component {
                     <label>Choose a file</label>
                     <button type="button" id="opt-receipt-button" onClick={() => this.handleUpload_Receipt()}>Upload</button>
                 </div>
+                <a href={this.state.receipt.link}>{this.state.receipt.name}</a>
+                <p>Status: {this.state.receipt.status}</p>
             </div>
         );
     }
@@ -182,6 +189,8 @@ class Visa extends React.Component {
                     <label>Choose a file</label>
                     <button type="button" id="opt-ead-button" onClick={() => this.handleUpload_Ead()}>Upload</button>
                 </div>
+                <a href={this.state.ead.link}>{this.state.ead.name}</a>
+                <p>Status: {this.state.ead.status}</p>
             </div>
         );
     }
@@ -195,6 +204,8 @@ class Visa extends React.Component {
                     <label>Choose a file</label>
                     <button type="button" id="i-983-button" onClick={() => this.handleUpload_I983()}>Upload</button>
                 </div>
+                <a href={this.state.i983.link}>{this.state.i983.name}</a>
+                <p>Status: {this.state.i983.status}</p>
             </div>
         );
     }
@@ -208,30 +219,66 @@ class Visa extends React.Component {
                     <label>Choose a file</label>
                     <button type="button" id="i-20-button" onClick={(e) => this.handleUpload_I20(e)}>Upload</button>
                 </div>
+                <a href={this.state.i20.link}>{this.state.i20.name}</a>
+                <p>Status: {this.state.i20.status}</p>
             </div>
         );
     }
 
     render() {
-        return (
-            <div className="visa-main">
-                <h2>Visa</h2>
-                <hr />
-                <h3>ID:{this.state.userId}</h3>
-                {this.showReceipt()}
-                <a href={this.state.receipt.link}>{this.state.receipt.name}</a>
-                <p>Status: {this.state.receipt.status}</p>
-                {this.showEad()}
-                <a href={this.state.ead.link}>{this.state.ead.name}</a>
-                <p>Status: {this.state.ead.status}</p>
-                {this.showI983()}
-                <a href={this.state.i983.link}>{this.state.i983.name}</a>
-                <p>Status: {this.state.i983.status}</p>
-                {this.showI20()}
-                <a href={this.state.i20.link}>{this.state.i20.name}</a>
-                <p>Status: {this.state.i20.status}</p>
-            </div>
-        )
+        if(this.state.i983.status === "Approved. Please upload a copy of your I-20."){
+            return (
+                <div className="visa-main">
+                    <h2>Visa</h2>
+                    <hr />
+                    <h3>ID:{this.state.userId}</h3>
+                    {this.showReceipt()}
+                    {this.showEad()}
+                    {this.showI983()}
+                    {this.showI20()}
+                </div>
+            )
+        }
+        else if(this.state.ead.status === "Approved. Please upload a copy of your I-983."){
+            return (
+                <div className="visa-main">
+                    <h2>Visa</h2>
+                    <hr />
+                    <h3>ID:{this.state.userId}</h3>
+                    {this.showReceipt()}
+                    {this.showEad()}
+                    {this.showI983()}
+                    {/* {this.showI20()} */}
+                </div>
+            )
+        }
+        else if(this.state.receipt.status === "Approved. Please upload a copy of your OPT EAD."){
+            return (
+                <div className="visa-main">
+                    <h2>Visa</h2>
+                    <hr />
+                    <h3>ID:{this.state.userId}</h3>
+                    {this.showReceipt()}
+                    {this.showEad()}
+                    {/* {this.showI983()} */}
+                    {/* {this.showI20()} */}
+                </div>
+            )
+        }
+        else{
+            return (
+                <div className="visa-main">
+                    <h2>Visa</h2>
+                    <hr />
+                    <h3>ID:{this.state.userId}</h3>
+                    {this.showReceipt()}
+                    {/* {this.showEad()} */}
+                    {/* {this.showI983()} */}
+                    {/* {this.showI20()} */}
+                </div>
+            )
+        }
+        
     }
 }
 
