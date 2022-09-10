@@ -7,20 +7,44 @@ require('dotenv').config()
 const jwt = require("jsonwebtoken");
 
 router.get('/visa', async(req, res, next) => {
-    console.log(req)
+    // console.log(req)
     // const visa = await Visa.find();
     res.status(200).send('visa');
 })
 
 router.get('/visaHR', async(req, res, next) => {
+    var ObjectId = require('mongodb').ObjectId;
     const visa = await Visa.find();
-    res.status(200).send(visa);
+    let userInfos = [];
+    for (let i = 0; i < visa.length; i++) {
+        let id = visa[i].userId;
+        let userInfo = await UserInfo.findOne({userId: ObjectId({id})});
+        if (userInfo) {
+            // console.log(userInfo.userName);
+            visa[i]._doc = {...visa[i]._doc, username: userInfo.userName};
+            visa[i].visa = userInfo.visa.visaType;
+        } else {
+            const username = {
+                firstName: 'firstName',
+                lastName: 'lastName',
+                middleName: 'middleName',
+                preferredName: 'preferredName',
+            }
+            visa[i]._doc = {...visa[i]._doc, username: username};
+            visa[i].visa = "OPT";
+        }
+        userInfos.push(visa[i]);
+    }
+    console.log(visa);
+    res.status(200).send({visa, userInfos});
 })
 
 router.post('/visa', async(req, res, next) => {
+    var ObjectId = require('mongodb').ObjectId;
     const jwtToken = req.body.jwtToken;
     const decode = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
     const user = await User.findOne({email: decode.email});
+    console.log(user._id);
     if (user) {
         const visa = await Visa.findOne({userId: user._id});
         if (visa) {
@@ -70,7 +94,7 @@ router.post('/visa_user/:userId/opt_receipt', async(req, res, next) => {
     const visa = await Visa.findOne({userId: id});
     const opt_receipt = req.body;
     visa.opt_receipt = opt_receipt;
-    console.log(visa);
+    // console.log(visa);
     await visa.save();
     res.status(200).send(visa);
 })
@@ -109,7 +133,9 @@ router.post('/visa_receipt_status', async(req, res, next) => {
     // console.log(opt_receipt);
     visa.opt_receipt = opt_receipt;
     await visa.save();
-    res.status(200).send(visa);
+    // res.status(200).send(visa);
+    const visaAll = await Visa.find();
+    res.status(200).send(visaAll);
 });
 
 router.post('/visa_ead_status', async(req, res, next) => {
@@ -119,7 +145,9 @@ router.post('/visa_ead_status', async(req, res, next) => {
     // console.log(opt_receipt);
     visa.opt_ead = opt_ead;
     await visa.save();
-    res.status(200).send(visa);
+    // res.status(200).send(visa);
+    const visaAll = await Visa.find();
+    res.status(200).send(visaAll);
 });
 
 router.post('/visa_i983_status', async(req, res, next) => {
@@ -129,7 +157,9 @@ router.post('/visa_i983_status', async(req, res, next) => {
     // console.log(opt_receipt);
     visa.i983 = i983;
     await visa.save();
-    res.status(200).send(visa);
+    // res.status(200).send(visa);
+    const visaAll = await Visa.find();
+    res.status(200).send(visaAll);
 });
 
 router.post('/visa_i20_status', async(req, res, next) => {
@@ -139,7 +169,9 @@ router.post('/visa_i20_status', async(req, res, next) => {
     // console.log(opt_receipt);
     visa.i20 = i20;
     await visa.save();
-    res.status(200).send(visa);
+    // res.status(200).send(visa);
+    const visaAll = await Visa.find();
+    res.status(200).send(visaAll);
 });
 
 module.exports = { VisaController: router }
