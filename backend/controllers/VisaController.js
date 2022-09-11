@@ -19,10 +19,18 @@ router.get('/visaHR', async(req, res, next) => {
     for (let i = 0; i < visa.length; i++) {
         let id = visa[i].userId;
         let userInfo = await UserInfo.findOne({userId: ObjectId({id})});
+        console.log(userInfo);
         if (userInfo) {
-            // console.log(userInfo.userName);
-            visa[i]._doc = {...visa[i]._doc, username: userInfo.userName};
-            visa[i].visa = userInfo.visa.visaType;
+            // visa[i]._doc = {...visa[i]._doc, username: userInfo.userName};
+            // visa[i].visa = userInfo.visa.visaType;
+            const username = {
+                firstName: 'firstName',
+                lastName: 'lastName',
+                middleName: 'middleName',
+                preferredName: 'preferredName',
+            }
+            visa[i]._doc = {...visa[i]._doc, username: username};
+            visa[i].visa = "OPT";
         } else {
             const username = {
                 firstName: 'firstName',
@@ -35,7 +43,7 @@ router.get('/visaHR', async(req, res, next) => {
         }
         userInfos.push(visa[i]);
     }
-    console.log(visa);
+    // console.log(visa);
     res.status(200).send({visa, userInfos});
 })
 
@@ -173,5 +181,51 @@ router.post('/visa_i20_status', async(req, res, next) => {
     const visaAll = await Visa.find();
     res.status(200).send(visaAll);
 });
+
+router.post('/visaHR_search', async(req, res, next) => {
+    var ObjectId = require('mongodb').ObjectId;
+    const search = req.body.search;
+    const visa = await Visa.find();
+    let userInfos = [];
+    let newVisa = [];
+    for (let i = 0; i < visa.length; i++) {
+        let id = visa[i].userId;
+        let userInfo = await UserInfo.findOne({userId: ObjectId({id})});
+        // if (userInfo) {
+        //     if (userInfo.userName.firstName.includes(search) || userInfo.userName.lastName.includes(search) || userInfo.userName.middleName.includes(search) || userInfo.userName.preferredName.includes(search)) {
+        //         newVisa.push(visa[i]);
+        //         visa[i]._doc = {...visa[i]._doc, username: userInfo.userName};
+        //         visa[i].visa = userInfo.visa.visaType;
+        //         userInfos.push(visa[i]);
+        //     }
+        // } else {
+        //     const username = {
+        //         firstName: 'firstName',
+        //         lastName: 'lastName',
+        //         middleName: 'middleName',
+        //         preferredName: 'preferredName',
+        //     }
+        //     if (username.firstName.includes(search) || username.lastName.includes(search) || username.middleName.includes(search) || username.preferredName.includes(search)) {
+        //         newVisa.push(visa[i]);
+        //         visa[i]._doc = {...visa[i]._doc, username: username};
+        //         visa[i].visa = "OPT";
+        //         userInfos.push(visa[i]);
+        //     }   
+        // }
+        const username = {
+            firstName: 'firstName',
+            lastName: 'lastName',
+            middleName: 'middleName',
+            preferredName: 'preferredName',
+        }
+        if (username.firstName.includes(search) || username.lastName.includes(search) || username.middleName.includes(search) || username.preferredName.includes(search)) {
+            newVisa.push(visa[i]);
+            visa[i]._doc = {...visa[i]._doc, username: username};
+            visa[i].visa = "OPT";
+            userInfos.push(visa[i]);
+        }  
+    }
+    res.status(200).send({newVisa, userInfos});
+})
 
 module.exports = { VisaController: router }

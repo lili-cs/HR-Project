@@ -7,8 +7,8 @@ window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const S3_BUCKET ='mybucketforhrproject';
 const REGION ='us-east-1';
-const ACCESS_KEY ='AKIAR6M2ZVOW2QK5I4O7';
-const SECRET_ACCESS_KEY ='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';
+const ACCESS_KEY ='AKIAR6M2ZVOWZ74DQQNP';
+const SECRET_ACCESS_KEY ='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';
 
 const config = {
     bucketName: S3_BUCKET,
