@@ -8,6 +8,7 @@ class VisaHR extends React.Component {
             userId: "6319a53889857ffd2112069c",
             users: [],
             userInfos: [],
+            search: "",
         };
     }
 
@@ -126,17 +127,46 @@ class VisaHR extends React.Component {
             console.log("error: ", error);
         })
     }
+
+    async searchChanges(e) {
+        await this.setState({search: e.target.value});
+    }
+
+    async updateSearch(e) {
+        // console.log(this.state.search);
+        const localHost = "http://localhost:4000"
+        await axios.post(`${localHost}/visaHR_search`,{
+            search: this.state.search,
+        })
+        .then((res)=>{
+            try{
+                this.setState({
+                    users: res.data.newVisa,
+                    userInfos: res.data.userInfos,
+                });
+            }
+            catch(err){
+                console.log(err);
+            }
+            console.log(res.data);
+        })
+        .catch((error)=>{ // error caught
+            console.log("error: ", error);
+        })
+    }
             
     render() {
         return (
             <div className="visa-main">
                 <h2>Visa-HR</h2>
+                <input type="text" className="visa-form-control" placeholder="Search" onChange={(e) => {this.searchChanges(e)}}/>
+                <button type="button" className="visa-btn visa-btn-primary" onClick={(e) => {this.updateSearch(e)}}>Search</button>      
                 <hr />
                 <form>
                     <div className="visa-form-group">
                         <div className="visa-all">
                             <h2>All</h2>
-                            {/* {console.log(this.state.users)} */}
+                            {console.log(this.state.users)}
                             {this.state.users.map((user, index) => {
                                 return (
                                     <div className="user-all" key={user.userId+"all"}>
