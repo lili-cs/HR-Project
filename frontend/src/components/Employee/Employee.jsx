@@ -104,7 +104,7 @@ const EmployeeApplication = () => {
                     type="date"
                     name="DOB"
                     onChange={handleTextChange}
-                    value={data.SSN ? data.SSN : ''}
+                    value={data.DOB ? data.DOB : ''}
                   ></input>
                 </div>
                 <div class="data-field">

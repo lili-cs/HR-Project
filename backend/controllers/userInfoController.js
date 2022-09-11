@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const UserInfo = require("../models/UserInfo");
 
+const User = require("../models/Users");
+
 router.post("/onboarding-application/add", async (req, res, next) => {
   const userInfo = new UserInfo(req.body);
   try {
@@ -19,8 +21,22 @@ router.get("/personalInfo", async function (req, res, next) {
 });
 
 router.get("/personalInfoAll", async function (req, res, next) {
-  let data = await UserInfo.find({});
-  res.send(data);
+  if (req.query.search) {
+    let search = req.query.search;
+    let data = await UserInfo.find({
+      $or: [
+        { "userName.firstName": { $regex: search } },
+        { "userName.lastName": { $regex: search } },
+        { "userName.preferredName": { $regex: search } },
+        { SSN: { $regex: search } },
+        { "phone.cellPhone": { $regex: search } },
+      ],
+    });
+    res.send(data);
+  } else {
+    let data = await UserInfo.find({});
+    res.send(data);
+  }
 });
 
 module.exports = { userInfoController: router };
