@@ -1,5 +1,6 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import axios from 'axios';
+import { useParams, useNavigate } from "react-router-dom";
 
 const formReducer = (state, event) => {
     return {
@@ -8,10 +9,38 @@ const formReducer = (state, event) => {
     }
 };
 
-function OnboardingApplication() {
+function OnboardingApplicationRejected() {
+    const { userName, applicationStatus } = useParams();
+
     // const [submittingName, setSubmittingName] = useState(false);
     let [visaTypeOther, setVisaTypeOther] = useState(false);
     const [ formData, setFormData ] = useReducer(formReducer, {});
+    const [picturePreview, setPicturePreview] = useState();
+    const [application, setApplication] = useState({});
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(
+        () => {
+            getApplication();
+        },
+        []
+    );
+
+
+    const getApplication = () => {
+
+        const url = 'http://localhost:4000/onboarding-applications/' + userName;
+        axios.get(url)
+            .then(res => {
+                // console.log(res);
+                setApplication(res.data);
+                setLoaded(true);
+                // setStatus(application.status);
+                // setFeedback(res.data.feedback);
+                console.log(res.data);
+            })
+            .catch(err => console.log(err));        
+    };
 
     const handleTextChange = event => {
         setFormData({
@@ -19,6 +48,15 @@ function OnboardingApplication() {
             value: event.target.value
         });
     };
+
+    const handlePictureChange = event => {
+        console.log(event.target.files);
+        setFormData({
+            name: event.target.name,
+            value: event.target.files[0]
+        });
+        setPicturePreview(URL.createObjectURL(event.target.files[0]));
+    }
 
     const handleRadioChange = event => {
         if(event.target.name === 'isCitizenOrGreencard' || event.target.name === 'hasDriverLicense'){
@@ -113,7 +151,7 @@ function OnboardingApplication() {
 
         const newApplication = {
             userNames: userNames,
-            profilePicture: null,
+            profilePicture: formData.profilePicture,
             SSN: formData.SSN,
             DOB: formData.DOB,
             gender: formData.gender,
@@ -139,55 +177,68 @@ function OnboardingApplication() {
         setVisaTypeOther(!visaTypeOther);
     };
 
+    if(!loaded){
+        return;
+    }
+
     return(
         <div className="onboarding-application-wrapper">
-            <h2>Onboarding Application</h2>
+            <h2>Onboarding Application (Rejected)</h2>
             {/* {submitting && <div>Submitting Form Data...</div>} */}
+            {applicationStatus === 'Pending' &&
+            <p>Please wait for HR to review your application</p>}
 
             <form onSubmit={handleSubmit}>
+                <div className="profilePictureWrapper">
+                            {/* <label>Add profile picture</label> */}
+                        <div className="profilePicture"><img alt='Profile Picture' src={picturePreview}></img></div>
+                            <input type='file' name='profilePicture' value={application.userInfoId.profilePicture} onChange={handlePictureChange}></input>
+                        </div>
                 <div>
-                    <div className="form-title">
+                    <div className="form-title form-row" >
                         <p>Name</p>
                         {/* {editting ? <button type='button' > Edit </button> : <button type='button' > Save </button>} */}
                     </div>
+
 
                     <fieldset>
                         <div className="form-row">
                             <div class='data-field'>
                                 <label>First Name</label>
-                                <input name = 'firstName' onChange={handleTextChange}></input>
+                                <input required name = 'firstName' value={application.userInfoId.userName && application.userInfoId.userName.firstName} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Last Name</label>
-                                <input name = 'lastName' onChange={handleTextChange}></input>
+                                <input  required name = 'lastName' value={application.userInfoId.userName && application.userInfoId.userName.lastName} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Middle Name</label>
-                                <input name = 'middleName' onChange={handleTextChange}></input>
+                                <input  name = 'middleName' value={application.userInfoId.userName && application.userInfoId.userName.middleName} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Preferred Name</label>
-                                <input name = 'preferredName' onChange={handleTextChange}></input>
+                                <input name = 'preferredName' value={application.userInfoId.userName && application.userInfoId.userName.preferredName} onChange={handleTextChange}></input>
                             </div>
                         </div>
                         <div className="form-row">
                             <div class='data-field'>
                                 <label>Email</label>
-                                <input name = 'email' onChange={handleTextChange}></input>
+                                <input name = 'email' value={application.userId.email} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>SSN</label>
-                                <input name = 'SSN' onChange={handleTextChange}></input>
+                                <input  required name = 'SSN' value={application.userInfoId.SSN} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Date of Birth</label>
-                                <input type='date' name = 'DOB' onChange={handleTextChange}></input>
+                                <input  required type='date' name = 'DOB' value={application.userInfoId.DOB} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Gender</label>
-                                <select name='gender' onChange={handleTextChange}>
+                                <select name='gender' value={application.userInfoId.gender} onChange={handleTextChange}>
                                     <option value='Male'>Male</option>
                                     <option value='Female'>Female</option>
+                                    <option value='I do not wish to answer'>I do not want to answer</option>
                                 </select>
                                 {/* <input name = 'gender' onChange={handleTextChange}></input> */}
                             </div>
@@ -205,25 +256,25 @@ function OnboardingApplication() {
                         <div className="form-row">
                             <div class='data-field'>
                                 <label>Street Name</label>
-                                <input name = 'streetName' onChange={handleTextChange}></input>
+                                <input required  name = 'streetName' value={application.userInfoId.address && application.userInfoId.address.streetName} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Building/Apt#</label>
-                                <input name = 'aptNum' onChange={handleTextChange}></input>
+                                <input required  name = 'aptNum' value={application.userInfoId.address && application.userInfoId.address.aptNum} onChange={handleTextChange}></input>
                             </div>
                         </div>
                         <div className="form-row">
                         <div class='data-field'>
                                 <label>City</label>
-                                <input name = 'city' onChange={handleTextChange}></input>
+                                <input required name = 'city' value={application.userInfoId.address && application.userInfoId.address.city} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>State</label>
-                                <input name = 'state' onChange={handleTextChange}></input>
+                                <input  required name = 'state' value={application.userInfoId.address && application.userInfoId.address.state} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Zip Code</label>
-                                <input name = 'zip' onChange={handleTextChange}></input>
+                                <input  required name = 'zip' value={application.userInfoId.address && application.userInfoId.address.zip} onChange={handleTextChange}></input>
                             </div>
                         </div>
                     </fieldset>
@@ -238,11 +289,11 @@ function OnboardingApplication() {
                         <div className="form-row">
                             <div class='data-field'>
                                 <label>Cell Phone</label>
-                                <input name = 'cellphone' onChange={handleTextChange}></input>
+                                <input  required  name = 'cellphone' value={application.userInfoId.phone && application.userInfoId.phone.cellPhone} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Work Phone</label>
-                                <input name = 'workphone' onChange={handleTextChange}></input>
+                                <input name = 'workphone'  value={application.userInfoId.phone && application.userInfoId.phone.workPhone} onChange={handleTextChange}></input>
                             </div>
                         </div>
                     </fieldset>
@@ -257,95 +308,85 @@ function OnboardingApplication() {
                         <div className="form-row">
                             <div class='data-field'>
                                 <label>Make</label>
-                                <input name = 'car_make' onChange={handleTextChange}></input>
+                                <input name = 'car_make' value={application.car && application.car.make} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Model</label>
-                                <input name = 'car_model' onChange={handleTextChange}></input>
+                                <input name = 'car_model' value={application.car && application.car.model} onChange={handleTextChange}></input>
                             </div>
                             <div class='data-field'>
                                 <label>Color</label>
-                                <input name = 'car_color' onChange={handleTextChange}></input>
+                                <input name = 'car_color' value={application.car && application.car.color} onChange={handleTextChange}></input>
                             </div>
                         </div>
                     </fieldset>
                 </div>
-                <div>
-                    <div className="form-title">
-                        <p>Emergency Contacts</p>
-                        {/* {editting ? <button type='button' > Edit </button> : <button type='button' > Save </button>} */}
-                    </div>
 
-                    <fieldset>
-                        <div className="form-row">
-                            <div class='data-field'>
-                                <label>First Name</label>
-                                <input name = 'emer_contact_firstName' onChange={handleTextChange}></input>
-                            </div>
-                            <div class='data-field'>
-                                <label>Last Name</label>
-                                <input name = 'emer_contact_lastName' onChange={handleTextChange}></input>
-                            </div>
-                            <div class='data-field'>
-                                <label>Middle Name</label>
-                                <input name = 'emer_contact_middleName' onChange={handleTextChange}></input>
-                            </div>
-                        </div>
-                        <div className="form-row">
-                            <div class='data-field'>
-                                <label>Email</label>
-                                <input name = 'emer_contact_email' onChange={handleTextChange}></input>
-                            </div>
-                            <div class='data-field'>
-                                <label>Phone</label>
-                                <input name = 'emer_contact_phone' onChange={handleTextChange}></input>
-                            </div>
-                            <div class='data-field'>
-                                <label>Relationship</label>
-                                <input name = 'emer_contact_relationship' onChange={handleTextChange}></input>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
                 <div>
                     <div className="form-title">
                         <p>Visa Status</p>
-                        {/* {editting ? <button type='button' > Edit </button> : <button type='button' > Save </button>} */}
                     </div>
 
                     <fieldset>
                         <p>Are you a citizen or permanent resident of the U.S.?</p>
                         <label>Yes</label>
-                        <input type='radio' name='isCitizenOrGreencard' value="true" onChange={handleRadioChange}/>
+                        <input  required type='radio' name='isCitizenOrGreencard' value="true" 
+                        checked={application.userInfoId.visa && (application.userInfoId.visa.visaType === 'Green Card' || application.userInfoId.visa.visaType === 'Citizen')}
+                        onChange={handleRadioChange}/>
                         <label>No</label>
-                        <input type='radio' name='isCitizenOrGreencard' value="false" onChange={handleRadioChange} />
+                        <input type='radio' name='isCitizenOrGreencard' value="false" 
+                        checked={application.userInfoId.visa && (application.userInfoId.visa.visaType !== 'Green Card' && application.userInfoId.visa.visaType !== 'Citizen')}
+                        onChange={handleRadioChange} />
 
                         {formData.isCitizenOrGreencard === true &&
                             <div>
                                 <label>Green Card</label>
-                                <input type='radio' name='visaType' value='greenCard' onChange={handleRadioChange} />
+                                <input  required type='radio' name='visaType' value='greenCard' 
+                                checked={application.userInfoId.visa && application.userInfoId.visa.visaType === 'Green Card'}
+                                onChange={handleRadioChange} />
                                 <label>Citizen</label>
-                                <input type='radio' name='visaType' value='citizen' onChange={handleRadioChange}/>
+                                <input type='radio' name='visaType' value='citizen' 
+                                checked={application.userInfoId.visa && application.userInfoId.visa.visaType === 'Citizen'}
+                                onChange={handleRadioChange}/>
                             </div>
                         }
                         {   
                             formData.isCitizenOrGreencard === false &&
                             <div>
                                 <p>What is your work authorization?</p>
+
                                 <label>H1-B</label>
-                                <input type='radio' name='visaType' value='H1-B' onChange={handleRadioChange} />
+                                <input  required  type='radio' name='visaType' value='H1-B' 
+                                checked={application.userInfoId.visa && application.userInfoId.visa.visaType === 'H1-B'}
+                                 onChange={handleRadioChange} />
+
                                 <label>L2</label>
-                                <input type='radio' name='visaType' value='L2' onChange={handleRadioChange} />
+                                <input type='radio' name='visaType' value='L2' 
+                                checked={application.userInfoId.visa && application.userInfoId.visa.visaType === 'L2'}
+                                onChange={handleRadioChange} />
+
                                 <label>F1(CPT/OPT)</label>
-                                <input type='radio' name='visaType' value='F1' onChange={handleRadioChange} />
+                                <input type='radio' name='visaType' value='F1' 
+                                checked={application.userInfoId.visa && application.userInfoId.visa.visaType === 'F1'}
+                                onChange={handleRadioChange} />
+
                                 <label>Other</label>
-                                <input type='radio' name='visaType' checked={visaTypeOther} value='other' onChange={handleVisaTypeOther} />
+                                <input type='radio' name='visaType' value='other' 
+                                checked={
+                                    application.userInfoId.visa && 
+                                    application.userInfoId.visa.visaType !== 'Green Card' &&
+                                    application.userInfoId.visa.visaType !== 'Citizen' &&
+                                    application.userInfoId.visa.visaType !== 'H1B' &&
+                                    application.userInfoId.visa.visaType !== 'L2' &&
+                                    application.userInfoId.visa.visaType !== 'F1'
+                                }
+                                onChange={handleVisaTypeOther} />
                                 { visaTypeOther &&
-                                    <input type='text' name ='visaType' onChange={handleTextChange} />}
+                                    <input type='text' name ='visaType' value={application.userInfoId.visa && application.userInfoId.visa.visaType} onChange={handleTextChange} />}
                                 <label>Start Date</label>
-                                <input type='date' name='visa_start_date' onChange={handleTextChange}></input>
+                                <input type='date' name='visa_start_date' value={application.userInfoId.visa && application.userInfoId.visa.startDate} onChange={handleTextChange}></input>
                                 <label>End Date</label>
-                                <input type='date' name='visa_end_date' onChange={handleTextChange}></input>
+                                <input type='date' name='visa_end_date' value={application.userInfoId.visa && application.userInfoId.visa.endDate} onChange={handleTextChange}></input>
                             </div>
                         }
                     </fieldset>
@@ -359,16 +400,20 @@ function OnboardingApplication() {
                     <fieldset>
                         <p>Do you have a driver's license?</p>
                         <label>Yes</label>
-                        <input type='radio' name='hasDriverLicense' value="true" onChange={handleRadioChange}/>
+                        <input  required type='radio' name='hasDriverLicense' value="true" 
+                        checked={application.driverLicense }
+                        onChange={handleRadioChange}/>
                         <label>No</label>
-                        <input type='radio' name='hasDriverLicense' value="false" onChange={handleRadioChange} />
+                        <input type='radio' name='hasDriverLicense' value="false" 
+                            checked={!application.driverLicense }
+                        onChange={handleRadioChange} />
 
                         {formData.hasDriverLicense === true &&
                             <div>
                                 <label>License Number</label>
-                                <input type='text' name='driver_license_number' onChange={handleTextChange} />
+                                <input  required type='text' name='driver_license_number' value={application.driverLicense && application.driverLicense.number} onChange={handleTextChange} />
                                 <label>Expiration Date</label>
-                                <input type='date' name='driver_license_expiration_date'  onChange={handleTextChange}/>
+                                <input  required type='date' name='driver_license_expiration_date' value={application.driverLicense && application.driverLicense.expirationDate} onChange={handleTextChange}/>
                             </div>
                         }
                       
@@ -377,23 +422,22 @@ function OnboardingApplication() {
                 <div>
                     <div className="form_title">
                         <p>Reference</p>
-                        {/* {editting ? <button type='button' > Edit </button> : <button type='button' > Save </button>} */}
                     </div>
 
                     <fieldset>
                         <p>Who referred you to this company?</p>
                         <label>First Name</label>
-                        <input type='text' name='reference_firstName' onChange={handleTextChange}/>
+                        <input  required type='text' name='reference_firstName' value={application.reference && application.reference.firstName} onChange={handleTextChange}/>
                         <label>Last Name</label>
-                        <input type='text' name='reference_lastName' onChange={handleTextChange} />
+                        <input  required type='text' name='reference_lastName' value={application.reference && application.reference.lastName} onChange={handleTextChange} />
                         <label>Middle Name</label>
-                        <input type='text' name='reference_middleName' onChange={handleTextChange} />
+                        <input type='text' name='reference_middleName' value={application.reference && application.reference.middleName} onChange={handleTextChange} />
                         <label>Phone</label>
-                        <input type='text' name='reference_phone' onChange={handleTextChange} />
+                        <input  required type='text' name='reference_phone'  value={application.reference && application.reference.phone} onChange={handleTextChange} />
                         <label>Email</label>
-                        <input type='text' name='reference_email' onChange={handleTextChange} />
+                        <input required  type='text' name='reference_email' value={application.reference && application.reference.email} onChange={handleTextChange} />
                         <label>Relationship</label>
-                        <input type='text' name='reference_relationship' onChange={handleTextChange} />                   
+                        <input  required type='text' name='reference_relationship'  value={application.reference && application.reference.relationship} onChange={handleTextChange} />                   
                     </fieldset>
                 </div>
                 <div>
@@ -406,19 +450,19 @@ function OnboardingApplication() {
                         <div>
                             {/* <p>Contact 1</p> */}
                             <label>First Name</label>
-                            <input type='text' name='emerency_firstName1' onChange={handleTextChange}/>
+                            <input type='text' name='emerency_firstName1'  value={application.userInfoId.emergencyContact && application.userInfoId.emergencyContact.name.firstName} onChange={handleTextChange}/>
                             <label>Last Name</label>
-                            <input type='text' name='emerency_lastName1' onChange={handleTextChange} />
+                            <input type='text' name='emerency_lastName1' value={application.userInfoId.emergencyContact && application.userInfoId.emergencyContact.name.lastName}  onChange={handleTextChange} />
                             <label>Middle Name</label>
-                            <input type='text' name='emerency_middleName1' onChange={handleTextChange} />
+                            <input type='text' name='emerency_middleName1'  value={application.userInfoId.emergencyContact && application.userInfoId.emergencyContact.name.middleName} onChange={handleTextChange} />
                             <label>Preferred Name</label>
-                            <input type='text' name='emerency_preferredName1' onChange={handleTextChange} />
+                            <input type='text' name='emerency_preferredName1'  value={application.userInfoId.emergencyContact && application.userInfoId.emergencyContact.name.preferredName} onChange={handleTextChange} />
                             <label>Phone</label>
-                            <input type='text' name='emerency_phone1' onChange={handleTextChange} />
+                            <input type='text' name='emerency_phone1'   value={application.userInfoId.emergencyContact && application.userInfoId.emergencyContact.phone} onChange={handleTextChange} />
                             <label>Email</label>
-                            <input type='text' name='emerency_email1' onChange={handleTextChange} />
+                            <input type='text' name='emerency_email1'   value={application.userInfoId.emergencyContact && application.userInfoId.emergencyContact.email} onChange={handleTextChange} />
                             <label>Relationship</label>
-                            <input type='text' name='emerency_relationship1' onChange={handleTextChange} />  
+                            <input type='text' name='emerency_relationship1'   value={application.userInfoId.emergencyContact && application.userInfoId.emergencyContact.relationship} onChange={handleTextChange} />  
                         </div>
                         {/* <br></br> */}
                         {/* <div>
@@ -448,10 +492,14 @@ function OnboardingApplication() {
             
                     </fieldset>
                 </div>
+                <div>
+                    <label>Rejection Feedback</label>
+                    <textarea disabled={true} value={application.feedback}>Feedback</textarea>
+                </div>
                 <button type='submit'>Submit</button>
             </form>
         </div> 
     )
 }
 
-export default OnboardingApplication;
+export default OnboardingApplicationRejected;

@@ -8,7 +8,12 @@ import VisaHR from './components/Visa/visaHR';
 // import Housing from './components/Housing/housing';
 import Login from './components/Login/Login';
 import Signup from './components/Signup/Signup';
-import OnboardingApplication from './components/OnboardingApplication/OnboardingApplication';
+import OnboardingApplicationRejected from './components/OnboardingApplication/OnboardingApplicationRejected';
+import OnboardingApplicationPending from './components/OnboardingApplication/OnboardingApplicationPending';
+import OnboardingApplicationNeverSubmitted from './components/OnboardingApplication/OnboardingApplicationNeverSubmitted';
+import HiringManagement from './components/HiringManagement/HiringManagement';
+import SingleApplicationView from './components/HiringManagement/SingleApplicationView';
+import Home from './components/Home/Home';
 
 function App() {
   return (
@@ -18,12 +23,18 @@ function App() {
 
         <Routes>
             {/* <Route path="personalInfo" element={<PersonalInfo />} /> */}
+            <Route path="" element={<Login />} />
+            <Route path="home" element={<Home />} />
             <Route path="visa" element={<Visa />} />
             <Route path="visaHR" element={<VisaHR />} />
-            <Route path="OnboardingApplication" element= {<OnboardingApplication />} />
+            <Route path="OnboardingApplication/NeverSubmitted/:userName" element= {<OnboardingApplicationNeverSubmitted />} />
+            <Route path="OnboardingApplication/Pending/:userName" element= {<OnboardingApplicationPending />} />
+            <Route path="OnboardingApplication/Rejected/:userName" element= {<OnboardingApplicationRejected />} />
+            <Route path="HiringManagement" element= {<HiringManagement />} />
+            <Route path='SingleApplicationView/:applicationId' element = {<SingleApplicationView />} />
             {/* <Route path="housing" element={<Housing />} /> */}
             <Route path="Login" element={<Login />} />
-            <Route path="Signup" element={<Signup />} />
+            <Route path="signup/:token" element={<Signup />} />
 
 
         </Routes>

@@ -1,7 +1,9 @@
 require('dotenv').config()
 var express = require('express');
 var router = express.Router();
-const UserModel = require("../models/Users")     // db model(schema)
+const UserModel = require("../models/Users");     // db model(schema)
+const OnboardingApplicationModel = require('../models/OnboardingApplication');
+const EmailInvitationModel = require('../models/EmailInvitation');
 const bcrypt = require('bcryptjs');             // password hash
 const jwt = require("jsonwebtoken");
 const EMAIL_VALIDATION = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -15,8 +17,19 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+
+
+async function getApplicationStatus(userName){ //added by Li Li
+  const userId = await UserModel.findOne({username: userName});
+  const application =  await OnboardingApplicationModel.findOne({userId: userId});
+  if (!application){
+    return 'NeverSubmitted';
+  }
+  return application.status;
+}
+
 // login
-router.post('/Login', async (req,res)=>{
+router.post('/login', async (req,res)=>{
   console.log("req.headers: ", req.headers)
   const {password,username} = req.body
   console.log("in Login")
@@ -48,11 +61,21 @@ router.post('/Login', async (req,res)=>{
         admin:dbResp.admin,
       }, process.env.JWT_SECRET_KEY);
       console.log("signed_jwt: ", signed_jwt)
+
+      const applicationStatus = await getApplicationStatus(username); //added by Li Li
       // redirect to proper page (admin or not)
+      
       const redirectURL = dbResp.admin? adminPage:nonAdminPage
       console.log("redirectURL: ", redirectURL)
       // send jwt token to front end
-      res.send({token:signed_jwt,success:true,redirect:redirectURL})
+      res.send(
+        {
+          token:signed_jwt,
+          success:true,
+          // redirect:redirectURL,
+          isHR: dbResp.admin,
+          applicationStatus: applicationStatus
+        })
     }
   }catch(e){  // username not in db
     console.log("e: ", e)
@@ -62,7 +85,7 @@ router.post('/Login', async (req,res)=>{
 })
 
 // register
-router.post('/Signup', async (req,res)=>{
+router.post('/signup/', async (req,res)=>{
   const {email,password,username} = req.body
   console.log(email)
   console.log(password)

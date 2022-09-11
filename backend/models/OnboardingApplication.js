@@ -1,3 +1,6 @@
+const UserInfo = require('../models/Users');
+const User = require('../models/Users');
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -24,17 +27,24 @@ const referenceSchema = Schema({
 
 const onboardingApplicationSchema = new Schema(
     {
-        userId: Schema.Types.ObjectId,
-        userInfoId: Schema.Types.ObjectId,
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        userInfoId: {
+            type: Schema.Types.ObjectId,
+            ref: 'UserInfo'
+        },
         status: {
             type: String,
             enum: {
-                values: ['Pending', 'Rejected', 'Submitted'],
+                values: ['Pending', 'Rejected', 'Approved'],
             }
         },
         car: carSchema,
         driverLicense: driverLicenseSchema,
-        reference: referenceSchema
+        reference: referenceSchema,
+        feedback: String
     }
 );
 

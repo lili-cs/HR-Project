@@ -25,11 +25,13 @@ class NavBar extends React.Component {
                     <NavLink to="visa">Visa Status Management</NavLink>
                     <NavLink to="visaHR">Visa-HR</NavLink>
                     <NavLink to="housing">Housing</NavLink>
-                    <NavLink to="OnboardingApplication">Onboarding Application</NavLink> 
+                    {/* <NavLink to="OnboardingApplication">Onboarding Application</NavLink>  */}
+                    <NavLink to="HiringManagement">Hiring Management</NavLink> 
+
                 </div>
                 <div className="nav-button-logout">
                     <NavLink to="Login">Login</NavLink>
-                    <NavLink to="Signup">Signup</NavLink>
+                    {/* <NavLink to="Signup">Signup</NavLink> */}
                     <NavLink to="logout">Logout</NavLink>
                 </div>
             </nav>    
