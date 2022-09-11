@@ -48,40 +48,55 @@ class NavBar extends React.Component {
     }
 
     render() {
-        if(this.state.isAdmin) {
-            return (
-                <nav className="main-nav">
-                    <div className="nav-left">
-                        <NavLink to="PersonalInfo">Personal Information</NavLink>
-                        <NavLink to="visaHR">Visa-HR</NavLink>
-                        <NavLink to="housing">Housing</NavLink>
-                        <NavLink to="OnboardingApplication">Onboarding Application</NavLink> 
-                    </div>
-                    <div className="nav-button-logout">
-                        <NavLink to="Login">Login</NavLink>
-                        <NavLink to="Signup">Signup</NavLink>
-                        <NavLink to="logout">Logout</NavLink>
-                    </div>
-                </nav>    
-            );
+        if(this.state.isLogedin){
+            if(this.state.isAdmin) {
+                return (
+                    <nav className="main-nav">
+                        <div className="nav-left">
+                            <NavLink to="PersonalInfo">Personal Information</NavLink>
+                            <NavLink to="visaHR">Visa-HR</NavLink>
+                            <NavLink to="housing">Housing</NavLink>
+                            <NavLink to="OnboardingApplication">Onboarding Application</NavLink> 
+                        </div>
+                        <div className="nav-button-logout">
+                            <NavLink to="Login">Login</NavLink>
+                            <NavLink to="Signup">Signup</NavLink>
+                            <NavLink to="logout">Logout</NavLink>
+                        </div>
+                    </nav>    
+                );
+            }
+            else {
+                return (
+                    <nav className="main-nav">
+                        <div className="nav-left">
+                            <NavLink to="PersonalInfo">Personal Information</NavLink>
+                            <NavLink to="visa">Visa Status Management</NavLink>
+                            <NavLink to="housing">Housing</NavLink>
+                            <NavLink to="OnboardingApplication">Onboarding Application</NavLink> 
+                        </div>
+                        <div className="nav-button-logout">
+                            <NavLink to="Login">Login</NavLink>
+                            <NavLink to="Signup">Signup</NavLink>
+                            <NavLink to="logout">Logout</NavLink>
+                        </div>
+                    </nav>    
+                );
+            }
         }
         else {
             return (
                 <nav className="main-nav">
                     <div className="nav-left">
-                        <NavLink to="PersonalInfo">Personal Information</NavLink>
-                        <NavLink to="visa">Visa Status Management</NavLink>
-                        <NavLink to="housing">Housing</NavLink>
-                        <NavLink to="OnboardingApplication">Onboarding Application</NavLink> 
                     </div>
                     <div className="nav-button-logout">
                         <NavLink to="Login">Login</NavLink>
                         <NavLink to="Signup">Signup</NavLink>
-                        <NavLink to="logout">Logout</NavLink>
                     </div>
                 </nav>    
             );
         }
+        
         
     }
 }
