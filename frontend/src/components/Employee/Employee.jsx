@@ -16,6 +16,7 @@ const EmployeeApplication = () => {
       const localHost = 'http://localhost:4000'
       try {
         const { data: res } = await axios.get(`${localHost}/personalInfo`)
+        console.log(res)
         setData(res)
       } catch (e) {
         console.error(e)
@@ -322,52 +323,23 @@ const EmployeeApplication = () => {
           <div>
             <div className="form-title">
               <p>Driver's License</p>
-              {/* {editting ? <button type='button' > Edit </button> : <button type='button' > Save </button>} */}
             </div>
-
-            <fieldset>
-              <p>Do you have a driver's license?</p>
-              <label>Yes</label>
-              <input
-                type="radio"
-                name="hasDriverLicense"
-                value="true"
-                onChange={handleRadioChange}
-              />
-              <label>No</label>
-              <input
-                type="radio"
-                name="hasDriverLicense"
-                value="false"
-                onChange={handleRadioChange}
-              />
-
-              {formData.hasDriverLicense === true && (
-                <div>
-                  <label>License Number</label>
-                  <input
-                    type="text"
-                    name="driver_license_number"
-                    onChange={handleTextChange}
-                  />
-                  <label>Expiration Date</label>
-                  <input
-                    type="date"
-                    name="driver_license_expiration_date"
-                    onChange={handleTextChange}
-                  />
-                </div>
-              )}
-            </fieldset>
           </div>
 
           <div>
             <div className="form-title">
               <p>Uploaded Files</p>
-              {/* {editting ? <button type='button' > Edit </button> : <button type='button' > Save </button>} */}
             </div>
 
-            <fieldset></fieldset>
+            <fieldset>
+              {data.documents
+                ? data.documents.map((item, key) => (
+                    <div class="data-field">
+                      <a href={item}>{item}</a>
+                    </div>
+                  ))
+                : ''}
+            </fieldset>
           </div>
           <button type="submit">Submit</button>
         </form>
