@@ -52,9 +52,6 @@ nav {
 
 
 .onboarding-application-wrapper, .hiringManagementWrapper {
-
-.onboarding-application-wrapper {
-
   padding: 5px 20px;
 }
 
@@ -96,6 +93,7 @@ nav {
 .onboarding-application-wrapper .profilePictureWrapper{
   display: flex;
   justify-content: flex-end;
+}
 
 .visa-form-group {
   display: flex;

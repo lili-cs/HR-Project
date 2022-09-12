@@ -16,8 +16,6 @@ import HiringManagement from './components/HiringManagement/HiringManagement';
 import SingleApplicationView from './components/HiringManagement/SingleApplicationView';
 import Home from './components/Home/Home';
 
-import Login from "./components/Login/Login";
-import Signup from "./components/Signup/Signup";
 import Hrprofile from "./components/hr/HRprofiles";
 import Employee from "./components/Employee/Employee";
 
