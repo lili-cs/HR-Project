@@ -50,7 +50,11 @@ nav {
   }
 } */
 
+
+.onboarding-application-wrapper, .hiringManagementWrapper {
+
 .onboarding-application-wrapper {
+
   padding: 5px 20px;
 }
 
@@ -63,6 +67,35 @@ nav {
 .onboarding-application-wrapper fieldset, data-field {
   margin: 20px 0;
 }
+
+.hiringManagementWrapper table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse
+}
+
+/* .onboarding-application-wrapper input{
+  pointer-events: none;
+  background-color: lightgrey;
+} */
+
+.hiringManagementWrapper table{
+  width: 100%;
+}
+
+.onboarding-application-wrapper .profilePicture{
+  width: 100px;
+  height: 100px;
+  border: 1px solid black
+}
+
+.onboarding-application-wrapper .profilePicture img{
+  width: 100px;
+  height: 100px;
+}
+
+.onboarding-application-wrapper .profilePictureWrapper{
+  display: flex;
+  justify-content: flex-end;
 
 .visa-form-group {
   display: flex;
@@ -78,4 +111,5 @@ nav {
 
 .user-all , .user-in-progress {
   border: 1px solid black;
+
 }

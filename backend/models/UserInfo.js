@@ -1,11 +1,20 @@
+const User  = require('../models/Users');
+const OnboardingApplication = require('../models/OnboardingApplication');
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const personNameSchema = Schema({
     firstName: String,
     lastName: String,
-    middleName: String,
-    preferredName: String
+    middleName: {
+        type: String,
+        default: ''
+    },
+    preferredName: {
+        type: String,
+        default: ''
+    }
 });
 
 const addressSchema = Schema(
@@ -20,52 +29,92 @@ const addressSchema = Schema(
 
 const phoneNumSchema = Schema({
     cellPhone: String,
-    workPhone: String
+    workPhone: {
+        type: String,
+        default: ''
+    },
 });
 
 const visaSchema = Schema({
     visaType: {
         type: String,
-        enum: {
-            values: ['Green Card', 'Citizen','H1-B','L2', 'F1(CPT/OPT)','H4','Other'],
-            // message: '{VALUE} is not supported'
-        }
+        // enum: {
+        //     values: ['Green Card', 'Citizen','H1-B','L2', 'F1','H4','Other'],
+        //     // message: '{VALUE} is not supported'
+        // }
+        default: ''
     },
-    startDate: String,
-    endDate: String
+    startDate: {
+        type: String,
+        default: ''
+    },
+    endDate: {
+        type: String,
+        default: ''
+    }
 });
 
 const emergencyContactSchema = Schema ({
     name: personNameSchema,
-    phone: String,
-    email: String,
-    relationship: String
+    phone: {
+        type: String,
+        default: ''
+    },
+    email: {
+        type: String,
+        default: ''
+    },
+    relationship: {
+        type: String,
+        default: ''
+    },
 });
 
 const userInfoSchema = new Schema(
     {
-        userId: Schema.Types.ObjectId,
-        userName: personNameSchema,
-        profilePicture: {
-            data: Buffer,
-            contentType: String
+        userId: {
+            type: Schema.Types.ObjectId,
+            // ref: 'User'
         },
-        SSN: String,
-        DOB: String,
+        userName: personNameSchema,
+        // profilePicture: {
+        //     data: Buffer,
+        //     contentType: String
+        // },
+        profilePicture: {
+            type: String,
+            default: ''
+        },
+        SSN: {
+            type: String,
+            required: true
+        },
+        DOB: {
+            type: String,
+            required: true
+        },
         gender: {
             type: String,
             enum: {
                 values: ['Male', 'Female', 'Do not wish to answer'],
                 // message: '{VALUE} is not supported'
-            }
+            },
+            default: ''
+            // required: true
         },
-        address: addressSchema,
+        address: {
+            type: addressSchema,
+            // required: true
+        },
         phone: phoneNumSchema,
         visa: visaSchema,
         emergencyContact: emergencyContactSchema,
         documents: [String],
         house: Schema.Types.ObjectId,
-        onboardingApplication: Schema.Types.ObjectId
+        // onboardingApplication: {
+        //     type: Schema.Types.ObjectId,
+        //     ref: OnboardingApplication
+        // }
     }
 );
 

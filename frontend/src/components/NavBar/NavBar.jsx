@@ -48,6 +48,7 @@ class NavBar extends React.Component {
     }
 
     render() {
+
         if(this.state.isLogedin){
             if(this.state.isAdmin) {
                 return (
