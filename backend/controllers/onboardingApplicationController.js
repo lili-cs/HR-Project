@@ -6,6 +6,7 @@ const User = require('../models/Users');
 const UserInfo = require('../models/UserInfo');
 const OnboardingApplication = require('../models/OnboardingApplication');
 
+
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage, limits:{fieldSize: 10 * 1024 * 1024} });
@@ -104,14 +105,32 @@ router.post('/onboarding-application/add/:userName', upload.single('profilePictu
                 data: req.file.buffer.toString('base64'),
                 contentType: 'image/png'
             } : null,
+
+router.post('/onboarding-application/add/:userId', async(req, res, next) => {
+    // const user_id = mongoose.Types.ObjectId(req.params.userId);
+    const user_id = req.params.userId;
+
+    try{
+        // const user_name = await User.findById(user_id); 
+
+        const newUserInfo = new UserInfo({
+            // userId: Schema.Types.ObjectId(req.params.userId),
+            userNames: req.body.userNames,
+            profilePicture: req.body.profilePicture,
+
             SSN: req.body.SSN,
             DOB: req.body.DOB,
             gender: req.body.gender,
             address: req.body.address,
             phone: req.body.phone,
             visa: req.body.visa,
+
             emergencyContact: !req.body.emergencyContact ? null : req.body.emergencyContact,
             documents: !req.body.documents ? [] : req.body.documents
+
+            emergencyContact: req.body.emergencyContact,
+            documents: req.body.documents
+
         });
 
         const result = await newUserInfo.save();
@@ -121,6 +140,7 @@ router.post('/onboarding-application/add/:userName', upload.single('profilePictu
             userId: user_id,
             userInfoId: userInfoId,
             status: 'Pending',
+
             car: !req.body.car ? null : req.body.car ,
             driverLicense: !req.body.driverLicense ? null : req.body.driverLicense,
             reference: !req.body.reference ? null : req.body.reference
@@ -128,11 +148,22 @@ router.post('/onboarding-application/add/:userName', upload.single('profilePictu
         
         await newApplication.save();
         res.status(200).send('create user applicaiton successfully');
+
+            car: req.body.car,
+            driverLicense: req.body.driverLicense,
+            reference: req.body. reference
+        });
+        
+        await newApplication.save();
+
         console.log('create user applicaiton successfully');
     }
     catch(err){
         console.log(err);
         res.status(501).send('save new userInfo or onboarding applicaton failed');
+
+        res.send('save new userInfo or onboarding applicaton failed');
+
     }
 });
 

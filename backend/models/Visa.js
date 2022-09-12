@@ -8,7 +8,7 @@ const visaSchema = new Schema({
     },
     visa: {
         type: String,
-        required: true,
+        required: false,
     },
     opt_receipt: {
         type: Object,

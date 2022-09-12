@@ -133,4 +133,13 @@ router.post('/signup/', async (req,res)=>{
   }
 })
 
+router.post('/check_admin', async(req, res, next) => {
+  var ObjectId = require('mongodb').ObjectId;
+  const jwtToken = req.body.jwtToken;
+  const decode = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
+  const user = await UserModel.findOne({email: decode.email});
+  console.log(user)
+  res.status(200).send(user);
+})
+
 module.exports = router;

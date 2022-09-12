@@ -6,7 +6,10 @@ const cors = require('cors');
 const { userInfoController } = require('./controllers/userInfoController');
 const { VisaController } = require('./controllers/VisaController');
 const { OnboardingApplicationController } = require('./controllers/onboardingApplicationController');
+
 const { EmailInvitationController } = require('./controllers/emailInvitationController');
+
+
 const userRouter = require('./routes/users');
 
 // cors
@@ -31,7 +34,9 @@ app.use(express.static(publicFolder));
 app.use(userRouter);
 app.use(VisaController);
 app.use(OnboardingApplicationController);
+
 app.use(EmailInvitationController);
+
 
 app.get('/', async (req, res) => {
   res.send('Welcome to HR Portal');
