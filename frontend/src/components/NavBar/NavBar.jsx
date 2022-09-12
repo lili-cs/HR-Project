@@ -56,9 +56,9 @@ class NavBar extends React.Component {
               <NavLink to="PersonalInfohr">HR Personal Information</NavLink>
               <NavLink to="visaHR">Visa-HR</NavLink>
               <NavLink to="housing">Housing</NavLink>
-              <NavLink to="OnboardingApplication">
+              {/* <NavLink to="OnboardingApplication">
                 Onboarding Application
-              </NavLink>
+              </NavLink> */}
             </div>
             <div className="nav-button-logout">
               <NavLink to="Login">Login</NavLink>
@@ -74,13 +74,13 @@ class NavBar extends React.Component {
               <NavLink to="PersonalInfo">Personal Information</NavLink>
               <NavLink to="visa">Visa Status Management</NavLink>
               <NavLink to="housing">Housing</NavLink>
-              <NavLink to="OnboardingApplication">
+              {/* <NavLink to="OnboardingApplication">
                 Onboarding Application
-              </NavLink>
+              </NavLink> */}
             </div>
             <div className="nav-button-logout">
               <NavLink to="Login">Login</NavLink>
-              <NavLink to="Signup">Signup</NavLink>
+              {/* <NavLink to="Signup">Signup</NavLink> */}
               <NavLink to="logout">Logout</NavLink>
             </div>
           </nav>
