@@ -39,9 +39,9 @@ const User = require('../models/Users');
 //     }
 // });
 
-const UserInfo = require("../models/UserInfo");
+// const UserInfo = require("../models/UserInfo");
 
-const User = require("../models/Users");
+// const User = require("../models/Users");
 
 router.post("/onboarding-application/add", async (req, res, next) => {
   const userInfo = new UserInfo(req.body);
